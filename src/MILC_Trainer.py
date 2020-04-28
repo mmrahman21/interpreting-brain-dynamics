@@ -130,7 +130,7 @@ class LSTMTrainer(Trainer):
                 sx.append(episode)
             yield torch.stack(sx).to(self.device), ts_number.to(self.device)
 
-    def compute_saliency_maps2(self, X, y, subjects_per_group, trial_no):
+    def get_saliency_maps(self, X, y, subjects_per_group, trial_no):
 
         # for param in self.encoder.parameters():
         #     print(param)
@@ -152,17 +152,17 @@ class LSTMTrainer(Trainer):
             counter = counter + 1
             if counter % 100 == 0:
                 print('Completed {} samples'.format(counter))
+
             x.requires_grad_()
             input = self.encoder(x, fmaps=False)
-
-            # new_input = torch.stack(inputs).to(self.device)
             input = input.unsqueeze(0).to(self.device)
+
             outputs = self.lstm(input)
 
             weights_list = []
 
             for Z in outputs:
-                # result = [self.attn(torch.cat((X[i], X[-1]), 0)) for i in range(X.shape[0])]
+                # result = [self.attn(torch.cat((Z[i], Z[-1]), 0)) for i in range(Z.shape[0])]
                 result = [self.attn(Z[i]) for i in range(Z.shape[0])]
                 result_tensor = torch.stack(result).to(self.device)
                 weights_list.append(result_tensor)
@@ -180,11 +180,10 @@ class LSTMTrainer(Trainer):
 
             # Pass the weighted output to decoder
             output = self.decoder(attn_applied)
-
-            grad_outputs = torch.zeros(x.shape[0], 2).to(self.device)
+            grad_outputs = torch.zeros(1, 2).to(self.device)
 
             label = l.long()
-            grad_outputs[:, label] = 1
+            grad_outputs[0][label] = 1
 
             self.optimizer.zero_grad()
 
@@ -194,6 +193,7 @@ class LSTMTrainer(Trainer):
             grads = x.grad.data
 
             saliency = np.squeeze(grads.cpu().numpy())
+
             saliencies.append(saliency)
 
         saliencies = np.stack(saliencies, axis=0)
@@ -202,7 +202,6 @@ class LSTMTrainer(Trainer):
         np.save(filename, saliencies)
 
         return saliencies
-
 
     def compute_saliency_maps(self, X, y, subjects_per_group, trial_no):
 
@@ -313,7 +312,7 @@ class LSTMTrainer(Trainer):
             if mode == 'test':
                 test_samples = [episodes[x] for x in range(episodes.shape[0])]
                 labels = [self.test_labels[x] for x in range(episodes.shape[0])]
-                saliency = self.compute_saliency_maps2(test_samples, labels, subjects_per_group, trial_no)
+                saliency = self.get_saliency_maps(test_samples, labels, subjects_per_group, trial_no)
                 print('Saliency Shape:', saliency.shape)
 
             epoch_loss += loss.detach().item()
@@ -323,6 +322,7 @@ class LSTMTrainer(Trainer):
                 # epoch_CE_loss += CE_loss.detach().item()
                 # epoch_E_loss += E_loss
                 # epoch_lstm_loss += lstm_loss.detach().item()
+
             if mode == 'eval' or mode == 'test':
                 epoch_roc += roc
 
