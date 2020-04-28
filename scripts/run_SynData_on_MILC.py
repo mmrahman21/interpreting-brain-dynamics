@@ -25,7 +25,7 @@ from scripts.createDirectories import  create_Directories
 from scripts.save_metrics import save_metrics
 from numpy import savetxt
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, KFold
-from scripts.generateSynData import artificial_batching_patterned_space, artificial_batching_patterned_space2
+from scripts.generateSynData import artificial_batching_patterned_space1, artificial_batching_patterned_space2
 
 
 def train_encoder(args):
@@ -38,10 +38,13 @@ def train_encoder(args):
         device = torch.device("cpu")
     print('device = ', device)
 
-    args.script_ID = 3
-    JOB = args.script_ID
-
+    # args.script_ID = 3
+    JOB = 3
+    print('Script ID:', args.script_ID)
     run_dir = create_Directories(args, 'sequence')
+
+    print('Directory Created:', run_dir)
+
     param = {1: 'FPT', 2: 'UFPT', 3: 'NPT'}
     exp_type = param[JOB]
     args.exp = exp_type
@@ -61,24 +64,43 @@ def train_encoder(args):
     current_gain = gain[ID]
     args.gain = current_gain
 
-    Data = np.load('../Noah Synthetic Data/Data.npy')
-    labels = np.load('../Noah Synthetic Data/Labels.npy')
+    # Data = np.load('../Noah Synthetic Data/Data.npy')
+    # labels = np.load('../Noah Synthetic Data/Labels.npy')
     # np.load('../Noah Synthetic Data/start_positions.npy')
     # np.load('../Noah Synthetic Data/masks.npy')
-    print('Data Loaded Successfully')
+    # print('Data Loaded Successfully')
 
-    # Data, labels, start_positions, masks = artificial_batching_patterned_space2(60000, 140, 50, seed=1988)
-    # print(Data[0, 0, 0:20])
-    # Data = np.moveaxis(Data, 1, 2)
+
+
+    Data, labels, start_positions, masks = artificial_batching_patterned_space2(30000, 140, 50, seed=1988)
+    print(Data[0, 0, 0:20])
+    Data = np.moveaxis(Data, 1, 2)
 
     print('Original Data Shape:', Data.shape)
+    print('Original Label Shape:', labels.shape)
 
-    subjects = 60000
+    new_data = np.zeros((30000, 50, 140))
+    new_label = np.zeros(30000)
+
+    if args.script_ID == 2:
+        for i in range(30000):
+            new_data[i, :, :] = np.flipud(Data[i, :, :])
+            # new_label[i] = 1-labels[i]
+
+        print('New Shape:', new_data.shape)
+        Data = new_data
+        print('Data is flipped')
+        # labels = new_label
+
+    else:
+        print('Model is running without flipping')
+
+    subjects = 30000
     sample_x = 50
     sample_y = 20
     tc = 140
-    samples_per_subject = 13 #7 #121
-    window_shift = 10
+    samples_per_subject = 7 #7 #121
+    window_shift = 20
 
     finalData = np.zeros((subjects, samples_per_subject, sample_x, sample_y))
 
@@ -89,19 +111,21 @@ def train_encoder(args):
     print('Data shape ended up with:', finalData.shape)
 
     for i in range(1):
-        tr_eps = finalData[0:50000, :, :, :]
-        val_eps = finalData[50000:55000, :, :, :]
-        test_eps = finalData[55000:, :, :, :]
+        tr_eps = finalData[0:25000, :, :, :]
+        val_eps = finalData[25000:27500, :, :, :]
+        test_eps = finalData[27500:, :, :, :]
 
-        tr_labels = labels[0:50000]
-        val_labels = labels[50000:55000]
-        test_labels = labels[55000:]
+        tr_labels = labels[0:25000]
+        val_labels = labels[25000:27500]
+        test_labels = labels[27500:]
+
+
 
         #================== Prepare for one time test ============#
 
         # args.path = './wandb/Sequence_Based_Models/OASIS_str_1_both_PTNT/'
 
-        args.path = './wandb/Sequence_Based_Models/Noah_Syn_Data_Exp_Stride_10_No_Anchor/'
+        args.path = './wandb/Sequence_Based_Models/New_Syn_Data_No_Overlap_Flipped_2/'
 
         # For model selection
 
