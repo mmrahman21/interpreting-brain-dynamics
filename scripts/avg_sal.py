@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-from src.usman_utils import get_argparser
+from src.utils import get_argparser
 from scripts.generateSynData import artificial_batching_patterned_space1, artificial_batching_patterned_space2
 
 
@@ -13,7 +13,8 @@ sample_y = 20
 
 
 X = np.zeros((2000, components, samples_per_subject * sample_y))
-basename = os.path.join(os.getcwd(), 'wandb', 'Sequence_Based_Models', 'MILC_100_models_saliencies')
+basename = "../wandb"
+basename = os.path.join(basename, 'Sequence_Based_Models', 'MILC_100_models_saliencies')
 
 for k in range(1, 101):
     print(k)
@@ -35,7 +36,7 @@ for k in range(1, 101):
     X += saliency
 
 X = X/100
-np.save(basename+"/aved_sal_raw", X)
+np.save(basename+"/new_dir_avg_sal_raw", X)
 
 
 

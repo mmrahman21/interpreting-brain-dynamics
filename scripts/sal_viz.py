@@ -7,7 +7,7 @@ import torch
 from torch.utils.data import RandomSampler, BatchSampler
 from scipy import signal
 from scipy.ndimage import gaussian_filter, gaussian_filter1d
-from src.usman_utils import get_argparser
+from src.utils import get_argparser
 from scripts.generateSynData import artificial_batching_patterned_space1, artificial_batching_patterned_space2
 
 
@@ -40,9 +40,9 @@ X = np.zeros((2000, components, samples_per_subject * sample_y))
 
 # k = 100
 # Read Saliency
-
-filename = os.path.join(os.getcwd(), 'wandb', 'Sequence_Based_Models')
-filename = os.path.join(filename, 'MILC_100_models_saliencies', 'NPT_subj_0_trial_'+str(26)+'.npy')
+filename = "../wandb"
+filename = os.path.join(filename, 'Sequence_Based_Models')
+filename = os.path.join(filename, 'MILC_100_models_saliencies', 'new_dir_avg_sal_raw.npy')
 saliency = np.load(filename)
 # print('Saliency {} loaded successfully...'.format(k))
 
@@ -59,12 +59,12 @@ saliency = np.abs(saliency)
 
 
 # Stitch all the frames together
-stiched_saliency = np.zeros((A.shape[0], components, samples_per_subject * sample_y))
-for i in range(A.shape[0]):
-    for j in range(A.shape[1]):
-        stiched_saliency[i, :, j * 20:j * 20 + sample_y] = saliency[i, j, :, :]
-
-saliency = stiched_saliency
+# stiched_saliency = np.zeros((A.shape[0], components, samples_per_subject * sample_y))
+# for i in range(A.shape[0]):
+#     for j in range(A.shape[1]):
+#         stiched_saliency[i, :, j * 20:j * 20 + sample_y] = saliency[i, j, :, :]
+#
+# saliency = stiched_saliency
 
 # For NO Overlapping # str = 20
 # ================== #
@@ -96,8 +96,9 @@ axes[0, 1].set_title('Saliency')
 
 plt.show()
 
-path = os.path.join(os.getcwd(), 'wandb', 'Sequence_Based_Models', 'MILC_100_models_saliencies')
-path = os.path.join(path, '', 'bestMap_' + str(26) + '.png')
+path = "../wandb"
+path = os.path.join(path, 'Sequence_Based_Models', 'MILC_100_models_saliencies')
+path = os.path.join(path, '', 'newDirAvgMap' + '.png')
 fig.savefig(path, format='png', dpi=600)
 
 

@@ -7,9 +7,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from torch.utils.data import RandomSampler, BatchSampler
-from .usman_utils import calculate_accuracy, Cutout, calculate_accuracy_by_labels, calculate_FP, calculate_FP_Max
+from .utils import calculate_accuracy, Cutout, calculate_accuracy_by_labels, calculate_FP, calculate_FP_Max
 from .trainer import Trainer
-from src.usman_utils import EarlyStopping
+from src.utils import EarlyStopping
 from torchvision import transforms
 import matplotlib.pylab as plt
 import matplotlib.pyplot as pl
@@ -203,70 +203,6 @@ class LSTMTrainer(Trainer):
 
         return saliencies
 
-    def compute_saliency_maps(self, X, y, subjects_per_group, trial_no):
-
-        # Wrap the input tensors in Variables
-
-        X = torch.stack(X)
-        y = torch.stack(y)
-        y = y.long()
-
-
-        X_var = Variable(X, requires_grad=True)
-        y_var = Variable(y, requires_grad=False)
-
-        inputs = [self.encoder(x, fmaps=False) for x in X_var]
-
-        new_input = torch.stack(inputs).to(self.device)
-        outputs = self.lstm(new_input)
-
-        weights_list = []
-
-        for Z in outputs:
-            # result = [self.attn(torch.cat((Z[i], Z[-1]), 0)) for i in range(X.shape[0])]
-            result = [self.attn(Z[i]) for i in range(Z.shape[0])]
-            result_tensor = torch.stack(result).to(self.device)
-            weights_list.append(result_tensor)
-
-        weights = torch.stack(weights_list).to(self.device)
-        weights = weights.squeeze().to(self.device)
-
-        # SoftMax normalization on weights
-        normalized_weights = F.softmax(weights, dim=1)
-
-        # Batch-wise multiplication of weights and lstm outputs
-
-        attn_applied = torch.bmm(normalized_weights.unsqueeze(1).to('cpu'), outputs.to('cpu'))
-        attn_applied = attn_applied.squeeze().to(self.device)
-
-
-        # Pass the weighted output to decoder
-        output = self.decoder(attn_applied)
-
-        grad_outputs = torch.zeros(X.shape[0], 2).to(self.device)
-
-        # grad_outputs[:, y] = 1
-
-        for i in range(grad_outputs.shape[0]):
-            grad_outputs[i, y[i]] = 1
-
-        print(grad_outputs)
-
-        self.optimizer.zero_grad()
-
-        print('Running backward')
-
-        output.backward(gradient=grad_outputs)
-
-        saliency = X_var.grad
-        saliency = saliency.cpu().clone().numpy()
-
-
-        path = os.path.join(self.path, 'Saliency')
-        filename = os.path.join(path, self.exp + '_subj_' + str(subjects_per_group) + '_trial_' + str(trial_no))
-        np.save(filename, saliency)
-
-        return saliency
 
     def do_one_epoch(self, epoch, episodes, mode, subjects_per_group, trial_no):
         # mode = "train" if self.encoder.training and self.classifier1.training else "val"

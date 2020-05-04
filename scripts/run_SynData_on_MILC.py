@@ -12,15 +12,15 @@ import torch
 import sys
 import os
 
-from src.usman_utils import get_argparser
+from src.utils import get_argparser
 from src.encoders_ICA import NatureCNN, ImpalaCNN, NatureOneCNN, LinearEncoder
 
 from src.MILC_Trainer import LSTMTrainer
-from src.usman_lstm_attn import subjLSTM
+from src.lstm_attn import subjLSTM
 import wandb
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from src.lstm_attn import subjLSTM
 from scripts.createDirectories import  create_Directories
 from scripts.save_metrics import save_metrics
 from numpy import savetxt

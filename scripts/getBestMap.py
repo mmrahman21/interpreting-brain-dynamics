@@ -12,8 +12,10 @@ samples_per_subject = 7
 sample_y = 20
 
 d = {}
-basename = os.path.join(os.getcwd(), 'wandb', 'Sequence_Based_Models', 'MILC_100_models_saliencies')
-fnavgmap = os.path.join(basename, 'aved_sal_raw.npy')
+
+basename = "../wandb"
+basename = os.path.join(basename, 'Sequence_Based_Models', 'MILC_100_models_saliencies')
+fnavgmap = os.path.join(basename, 'new_dir_avg_sal_raw.npy')
 avg = np.load(fnavgmap)
 
 filename = os.path.join(basename, 'NPT_subj_0_trial_'+str(1)+'.npy')
