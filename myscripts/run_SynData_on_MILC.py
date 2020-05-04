@@ -12,20 +12,24 @@ import torch
 import sys
 import os
 
-from src.utils import get_argparser
-from src.encoders_ICA import NatureCNN, ImpalaCNN, NatureOneCNN, LinearEncoder
+from source.utils import get_argparser
+from source.encoders_ICA import NatureCNN, ImpalaCNN, NatureOneCNN, LinearEncoder
 
-from src.MILC_Trainer import LSTMTrainer
-from src.lstm_attn import subjLSTM
+
+for p in sys.path:
+    print(p)
+from source.MILC_Trainer import LSTMTrainer
+from source.ATTLSTM import subjLSTM
 import wandb
 import pandas as pd
+
 import matplotlib.pyplot as plt
-from src.lstm_attn import subjLSTM
-from scripts.createDirectories import  create_Directories
-from scripts.save_metrics import save_metrics
+from myscripts.createDirectories import  create_Directories
+from myscripts.save_metrics import save_metrics
 from numpy import savetxt
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, KFold
 from scripts.generateSynData import artificial_batching_patterned_space1, artificial_batching_patterned_space2
+
 
 
 def train_encoder(args):
@@ -33,7 +37,7 @@ def train_encoder(args):
 
     if torch.cuda.is_available():
         cudaID = str(torch.cuda.current_device())
-        device = torch.device("cuda:" + str(1))
+        device = torch.device("cuda:" + str(cudaID))
     else:
         device = torch.device("cpu")
     print('device = ', device)
@@ -42,6 +46,14 @@ def train_encoder(args):
     JOB = 3
     print('Script ID:', args.script_ID)
     run_dir = create_Directories(args, 'sequence')
+
+    # dir = "MyRunDir"
+    # wdb = 'wandb'
+    # wpath = os.path.join(os.getcwd(), wdb)
+    # sbpath = os.path.join(wpath, 'Sequence_Based_Models')
+    # path = os.path.join(sbpath, dir)
+    # run_dir = path
+    # args.path = path
 
     print('Directory Created:', run_dir)
 
@@ -125,7 +137,7 @@ def train_encoder(args):
 
         # args.path = './wandb/Sequence_Based_Models/OASIS_str_1_both_PTNT/'
 
-        args.path = './wandb/Sequence_Based_Models/New_Syn_Data_No_Overlap_Flipped_2/'
+        # args.path = '../wandb/Sequence_Based_Models/New_Syn_Data_No_Overlap_Flipped_2/'
 
         # For model selection
 
@@ -191,8 +203,8 @@ def train_encoder(args):
             if args.pre_training == "milc":
                 # dir = 'wandb/realData_pretrained_encoder/Milc_rw_bs_32/encoder.pt'
                 # args.oldpath = os.path.join(os.getcwd(), 'wandb/realData_pretrained_encoder/Milc')
-                dir = 'wandb/realData_pretrained_encoder/Milc_rw_bs_32/encoder.pt'
-                args.oldpath = os.path.join(os.getcwd(), 'wandb/realData_pretrained_encoder/Milc_rw_bs_32')
+                dir = '../wandb/realData_pretrained_encoder/Milc_rw_bs_32/encoder.pt'
+                args.oldpath = os.path.join('../', 'wandb/realData_pretrained_encoder/Milc_rw_bs_32')
 
             path = os.path.join(os.getcwd(), dir)
             encoder = NatureOneCNN(observation_shape[2], args)
@@ -219,11 +231,11 @@ def train_encoder(args):
             assert False, "method {} has no trainer".format(args.method)
 
     #===================For one time test only ==========#
-        acc, auc = trainer.load_model_and_test(test_eps, 0, 0)
-        print('AUC: {} \n Acc: {}'.format(auc, acc))
+        # acc, auc = trainer.load_model_and_test(test_eps, 0, 0)
+        # print('AUC: {} \n Acc: {}'.format(auc, acc))
     #====================================================#
 
-        # accuracy, auc, loss, required_epochs = trainer.train(tr_eps, val_eps,test_eps, 0, i )
+        accuracy, auc, loss, required_epochs = trainer.train(tr_eps, val_eps,test_eps, 0, i )
 
     # save_metrics(exp_type, accuracy, loss, auc, required_epochs, run_dir)
     elapsed_time = time.time() - start_time

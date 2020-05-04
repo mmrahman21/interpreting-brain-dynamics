@@ -7,9 +7,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from torch.utils.data import RandomSampler, BatchSampler
-from .utils import calculate_accuracy, Cutout, calculate_accuracy_by_labels, calculate_FP, calculate_FP_Max
-from .trainer import Trainer
-from src.utils import EarlyStopping
+from source.utils import calculate_accuracy, Cutout, calculate_accuracy_by_labels, calculate_FP, calculate_FP_Max
+from source.trainer import Trainer
+from source.utils import EarlyStopping
 from torchvision import transforms
 import matplotlib.pylab as plt
 import matplotlib.pyplot as pl
@@ -248,6 +248,8 @@ class LSTMTrainer(Trainer):
             if mode == 'test':
                 test_samples = [episodes[x] for x in range(episodes.shape[0])]
                 labels = [self.test_labels[x] for x in range(episodes.shape[0])]
+                test_samples = torch.stack(test_samples).to(self.device)
+                labels = torch.stack(labels).to(self.device)
                 saliency = self.get_saliency_maps(test_samples, labels, subjects_per_group, trial_no)
                 print('Saliency Shape:', saliency.shape)
 
@@ -382,27 +384,28 @@ class LSTMTrainer(Trainer):
 
         model_dict = torch.load(os.path.join(self.path, 'encoder' + self.trials + '.pt'), map_location=self.device)
         self.encoder.load_state_dict(model_dict)
-        self.encoder.eval()
+        # self.encoder.eval()
         self.encoder.to(self.device)
 
         print('Loading LSTM...')
 
         model_dict = torch.load(os.path.join(self.path, 'lstm' +  self.trials + '.pt'), map_location=self.device)
         self.lstm.load_state_dict(model_dict)
-        self.lstm.eval()
+        # self.lstm.eval()
         self.lstm.to(self.device)
+        self.lstm.train()
 
         print('Loading Attention')
 
         model_dict = torch.load(os.path.join(self.path, 'attn' +  self.trials + '.pt'), map_location=self.device)
         self.attn.load_state_dict(model_dict)
-        self.attn.eval()
+        # self.attn.eval()
         self.attn.to(self.device)
 
         print('Loading Decoder')
         model_dict = torch.load(os.path.join(self.path, 'cone' + self.trials + '.pt'), map_location=self.device)
         self.decoder.load_state_dict(model_dict)
-        self.decoder.eval()
+        # self.decoder.eval()
         self.decoder.to(self.device)
 
 

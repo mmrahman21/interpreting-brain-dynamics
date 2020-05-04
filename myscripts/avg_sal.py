@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-from src.utils import get_argparser
+from source.utils import get_argparser
 from scripts.generateSynData import artificial_batching_patterned_space1, artificial_batching_patterned_space2
 
 

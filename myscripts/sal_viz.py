@@ -7,7 +7,7 @@ import torch
 from torch.utils.data import RandomSampler, BatchSampler
 from scipy import signal
 from scipy.ndimage import gaussian_filter, gaussian_filter1d
-from src.utils import get_argparser
+from source.utils import get_argparser
 from scripts.generateSynData import artificial_batching_patterned_space1, artificial_batching_patterned_space2
 
 
