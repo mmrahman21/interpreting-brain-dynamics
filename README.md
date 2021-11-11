@@ -35,7 +35,7 @@ In the  scripts folder, all of the scripts required to build and evaluate **Stan
 
 - *run_random_rar.py*: is used to build **SML** models using random (5% - 30%)feature selection and **SVM** models.
 
-- *saliency_interp_n_vis.ipynb* is used to visualize saliency maps, to further analysis of group-level behavior (Functional Network Connectivity, Events' Timing Characteristics etc.). 
+- *saliency_interp_n_vis.ipynb* is used to visualize saliency maps, to analyze group-level behavior (Functional Network Connectivity,Timing Characteristics etc.). 
 
 ### How to Run:
 
