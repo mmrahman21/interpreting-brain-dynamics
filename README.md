@@ -20,7 +20,7 @@ Brain dynamics are highly complex and yet hold the key to understanding brain fu
 + Human Connectome Project (HCP) (For pre-training only)
 
 
-# Experiments and Scripts
+### Experiments and Scripts
 In the  scripts folder, all of the scripts required to build and evaluate **Standard Machine Learning (SML)** models, pretrain **whole MILC**, generate **post-hoc explanations** evaluate explanations using **RAR** method are provided:
 
 - *run_sml.py*: is used to build and evaluate standard machine learning models from the raw data (ICA time-courses).
