@@ -4,7 +4,7 @@ This repository provides code to replicate the findings in:
 **Interpreting Models Interpreting Brain Dynamics** by<br/>
 *M. M. Rahman, U. Mahmood, N. Lewis, H. Gazula, A. Fedorov, Z. Fu, V. D. Calhoun & S. M. Plis*.
 
-<img src="https://raw.githubusercontent.com/mmrahman21/model_introspection/master/doc/figures/diagram.pdf" width="700">
+<img src="https://github.com/mmrahman21/model_introspection/master/doc/figures/diagram.pdf" width="700">
 
 
 ## Overview
