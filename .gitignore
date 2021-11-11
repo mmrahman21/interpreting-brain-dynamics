@@ -1,0 +1,17 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore folder
+code\ not\ directly\ related\ to\ the\ paper/
+scripts/milcLSTMonly*
+scripts/*plot*
+scripts/spatial_maps.py
+scripts/run_ml_classifier.py
+
+# Ignore other files
+*.pyc
+
+# Ignore .txt files
+*.txt
+
+
