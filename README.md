@@ -6,7 +6,7 @@ This repository provides code to replicate the findings in:
 
 ![main_diagram](https://user-images.githubusercontent.com/45178290/141242644-6934f195-67ea-4656-bb02-2cdf6ba078bc.png)
 
-<img src="https://github.com/mmrahman21/model_introspection/tree/master/doc/figures/main_diagram.png" width="700" height="500">
+<> <img src="https://github.com/mmrahman21/model_introspection/tree/master/doc/figures/main_diagram.png" width="700" height="500">
 
 
 ## Overview
