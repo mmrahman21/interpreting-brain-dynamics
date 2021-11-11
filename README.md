@@ -20,7 +20,7 @@ Brain dynamics are highly complex and yet hold the key to understanding brain fu
 + Human Connectome Project (HCP) (For pre-training only)
 
 
-### Experiments
+### Experiments and Scripts
 In the  scripts folder, all of the scripts required to build and evaluate **Standard Machine Learning (SML)** models, pretrain **whole MILC**, generate **post-hoc explanations** evaluate explanations using **RAR** method are provided:
 
 - *run_sml.py*: is used to build and evaluate standard machine learning models from the raw data (ICA time-courses).
@@ -29,13 +29,15 @@ In the  scripts folder, all of the scripts required to build and evaluate **Stan
 
 - *run_downstream_model*: is used to train and evaluate downstream models for different disorders.
 
-- *run_downstream_sal_compute.py*: is used to compute saliency maps per (model-disorder) pair.
+- *run_downstream_sal_compute.py*: is used to compute **saliency maps/feature attributions** per (model-disorder) pair.
 
 - *run_rar_fresh.py*: is used to build new **SML** models using **RAR** and **SVM** with top (5% - 30%) features guided by computed **Saliency**.
 
 - *run_random_rar.py*: is used to build **SML** models using random (5% - 30%)feature selection and **SVM** models.
 
-### How to run:
+- *saliency_interp_n_vis.ipynb* is used to visualize saliency maps, to further analysis of group-level behavior (Functional Network Connectivity, Events' Timing Characteristics etc.). 
+
+### How to Run:
 
 - *For building standard machine learning models* on raw data:
 
@@ -43,11 +45,30 @@ In the  scripts folder, all of the scripts required to build and evaluate **Stan
 python run_sml.py dataset_id
 ```
 
-- *For pretraining whole MILC* using  data:
+- *For pretraining whole MILC* using HCP data:
 
 ```
 python run_milc_pretraining.py
 ```
+
+- *For building downstream whole MILC* model using disorder specific data:
+
+```
+python run_downstream_model.py dataset_id
+```
+
+- *For generating post-hoc explanations* per (model-disorder) pair:
+
+```
+python run_downstream_sal_compute.py dataset_id
+```
+
+- *For evaluation of posthoc explanation* using **RAR** and **SVM**:
+
+```
+python run_rar_fresh.py dataset_id
+```
+
 **dataset_id** options:
 - FBIRN: 0
 - OASIS: 2
