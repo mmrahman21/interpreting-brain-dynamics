@@ -8,6 +8,7 @@ This repository provides code to replicate the findings in:
 
 # <img src="https://github.com/mmrahman21/model_introspection/tree/master/doc/figures/main_diagram.png" width="700" height="500">
 
+
 [comment]: # This is a comment
 
 ## Overview
