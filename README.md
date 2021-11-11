@@ -9,8 +9,6 @@ This repository provides code to replicate the findings in:
 <!-- <img src="https://github.com/mmrahman21/model_introspection/tree/master/doc/figures/main_diagram.png" width="700" height="500"> -->
 
 
-I can still see the <!--just--> in the second paragraph.
-
 ## Overview
 Brain dynamics are highly complex and yet hold the key to understanding brain function and dysfunction. The dynamics captured by resting-state functional magnetic resonance imaging data are noisy, high-dimensional, and not readily interpretable. The typical approach of reducing this data to low-dimensional features and focusing on the most predictive features comes with strong assumptions and can miss essential aspects of the underlying dynamics. In contrast, introspection of discriminatively trained deep learning models may uncover disorder-relevant elements of the signal at the level of individual time points and spatial locations. Yet, the difficulty of reliable training on high-dimensional low sample size datasets and the unclear relevance of the resulting predictive markers prevent the widespread use of deep learning in functional neuroimaging. In this work, we introduce a deep learning framework to learn from high-dimensional dynamical data while maintaining stable, ecologically valid interpretations. Results successfully demonstrate that the proposed framework enables learning the dynamics of resting-state fMRI directly from small data and capturing compact, stable interpretations of features predictive of function and dysfunction. 
 
@@ -22,8 +20,8 @@ Brain dynamics are highly complex and yet hold the key to understanding brain fu
 + Human Connectome Project (HCP) (For pre-training only)
 
 
-#### Experiments
-In the  scripts folder, all of the scripts required to build and evaluate **Standard Machine Learning (SML) ** models, pretrain **whole MILC**, generate **post-hoc explanations** evaluate explanations using **RAR** method are provided:
+### Experiments
+In the  scripts folder, all of the scripts required to build and evaluate **Standard Machine Learning (SML)** models, pretrain **whole MILC**, generate **post-hoc explanations** evaluate explanations using **RAR** method are provided:
 
 - *run_sml.py*: is used to build and evaluate standard machine learning models from the raw data (ICA time-courses).
 
@@ -37,10 +35,18 @@ In the  scripts folder, all of the scripts required to build and evaluate **Stan
 
 - *run_random_rar.py*: is used to build **SML** models using random (5% - 30%)feature selection and **SVM** models.
 
-#### How to run:
+### How to run:
+
+- *For building standard machine learning models* on raw data:
 
 ```
 python run_sml.py dataset_id
+```
+
+- *For pretraining whole MILC* using  data:
+
+```
+python run_milc_pretraining.py
 ```
 **dataset_id** options:
 - FBIRN: 0
